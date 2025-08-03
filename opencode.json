@@ -1,0 +1,154 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "github-copilot/gpt-4.1",
+  "small_model": "github-copilot/o4-mini",
+  
+  "instructions": [
+    "./prompts/orchestrator-instructions.md"
+  ],
+  
+  "mode": {
+    "orchestrate": {
+      "description": "Full orchestration mode for automated app building workflow",
+      "model": "github-copilot/o3",
+      "temperature": 0.1,
+      "tools": {
+        "write": true,
+        "edit": true,
+        "bash": true,
+        "read": true,
+        "grep": true,
+        "patch": true
+      }
+    },
+    "plan": {
+      "description": "Planning and architecture mode - read-only analysis",
+      "model": "github-copilot/gpt-4.1",
+      "temperature": 0,
+      "tools": {
+        "write": false,
+        "edit": false,
+        "bash": false,
+        "read": true,
+        "grep": true,
+        "glob": true
+      }
+    },
+    "build": {
+      "description": "Full development mode with all tools enabled",
+      "model": "github-copilot/gpt-4.1",
+      "temperature": 0.1,
+      "tools": {
+        "write": true,
+        "edit": true,
+        "bash": true,
+        "read": true,
+        "grep": true,
+        "glob": true,
+        "patch": true
+      }
+    },
+    "review": {
+      "description": "Code review and testing mode",
+      "model": "github-copilot/claude-sonnet-4",
+      "temperature": 0,
+      "tools": {
+        "write": true,
+        "edit": false,
+        "bash": true,
+        "read": true,
+        "grep": true
+      }
+    }
+  },
+
+  "agent": {
+    "architect": {
+      "description": "System architect for planning application structure, database design, and technical decisions",
+      "model": "github-copilot/o3",
+      "temperature": 0,
+      "prompt": "{file:./prompts/architect-prompt.md}",
+      "tools": {
+        "read": true,
+        "write": true,
+        "edit": false,
+        "bash": false
+      }
+    },
+    
+    "developer": {
+      "description": "Full-stack developer for implementing features, writing code, and handling technical implementation",
+      "model": "github-copilot/gpt-4.1",
+      "temperature": 0.1,
+      "prompt": "{file:./prompts/developer-prompt.md}",
+      "tools": {
+        "read": true,
+        "write": true,
+        "edit": true,
+        "bash": true,
+        "grep": true
+      }
+    },
+    
+    "frontend": {
+      "description": "Frontend specialist for UI/UX implementation, React components, and user interfaces",
+      "model": "github-copilot/gpt-4o",
+      "temperature": 0.2,
+      "prompt": "{file:./prompts/frontend-prompt.md}",
+      "tools": {
+        "read": true,
+        "write": true,
+        "edit": true,
+        "bash": false
+      }
+    },
+    
+    "backend": {
+      "description": "Backend specialist for APIs, database operations, server logic, and infrastructure",
+      "model": "github-copilot/gpt-4.1",
+      "temperature": 0.1,
+      "prompt": "{file:./prompts/backend-prompt.md}",
+      "tools": {
+        "read": true,
+        "write": true,
+        "edit": true,
+        "bash": true,
+        "grep": true
+      }
+    },
+    
+    "tester": {
+      "description": "Quality assurance specialist for writing tests, debugging, and ensuring code quality",
+      "model": "github-copilot/o4-mini",
+      "temperature": 0,
+      "prompt": "{file:./prompts/tester-prompt.md}",
+      "tools": {
+        "read": true,
+        "write": true,
+        "bash": true,
+        "grep": true
+      }
+    },
+    
+    "documenter": {
+      "description": "Technical writer for creating documentation, README files, and code comments",
+      "model": "github-copilot/o4-mini",
+      "temperature": 0.3,
+      "prompt": "{file:./prompts/documenter-prompt.md}",
+      "tools": {
+        "read": true,
+        "write": true,
+        "edit": false,
+        "bash": false
+      }
+    }
+  },
+
+  "permission": {
+    "edit": "allow",
+    "bash": "allow"
+  },
+
+  "autoupdate": false,
+  "theme": "dark"
+}
