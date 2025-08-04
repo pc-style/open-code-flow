@@ -42,8 +42,8 @@ A comprehensive OpenCode configuration for automated app building with specializ
 
 3. **Clone this configuration**:
    ```bash
-   git clone [your-repo-url]
-   cd opencode-flow
+   git clone https://github.com/pc-style/open-code-flow.git
+   cd open-code-flow
    ```
 
 4. **Use the configuration**:

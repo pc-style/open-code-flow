@@ -150,18 +150,18 @@ main() {
     # Step 3: Download repository
     print_step "${DOWNLOAD}" "Downloading OpenCode configuration..."
     
-    # For now, we'll create the structure since we don't have a remote repo URL yet
-    # In production, replace this with: git clone https://github.com/yourusername/opencode-flow.git "$PROJECT_DIR"
-    
-    mkdir -p "$PROJECT_DIR"
-    cd "$PROJECT_DIR"
-    
-    # Initialize git and create structure
-    git init -q
-    git branch -m main 2>/dev/null || true
-    
-    # Create prompts directory
-    mkdir -p prompts
+    # Clone the repository
+    if git clone https://github.com/pc-style/open-code-flow.git "$PROJECT_DIR"; then
+        cd "$PROJECT_DIR"
+        print_success "Repository cloned successfully"
+    else
+        print_error "Failed to clone repository. Creating structure manually..."
+        mkdir -p "$PROJECT_DIR"
+        cd "$PROJECT_DIR"
+        git init -q
+        git branch -m main 2>/dev/null || true
+        mkdir -p prompts
+    fi
     
     print_success "Project structure created"
     
