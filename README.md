@@ -1,127 +1,235 @@
-# OpenCode Automated Workflow System
+# HTTP Traffic Monitor Server
 
-A comprehensive OpenCode configuration for automated app building with specialized AI agents and GitHub Copilot models.
+A real-time HTTP traffic monitoring server with WebSocket dashboard built with Node.js, Express, and Socket.IO.
 
 ## 🚀 Features
 
-- **6 Specialized Agents**: Architect, Developer, Frontend, Backend, Tester, Documenter
-- **4 Custom Modes**: Orchestrate, Plan, Build, Review
-- **GitHub Copilot Integration**: Optimized model selection based on official recommendations
-- **Automated Workflows**: Task delegation and coordination between agents
+- **Real-time Traffic Monitoring**: Track incoming HTTP requests in real-time
+- **Comprehensive Metrics**: Monitor bandwidth, response times, requests per second, and more
+- **WebSocket Dashboard**: Live updating dashboard with beautiful UI
+- **Status Code Tracking**: Monitor HTTP response status codes
+- **Memory-based Storage**: Fast in-memory statistics with rolling windows
+- **RESTful API**: JSON API for accessing statistics programmatically
 
-## 🤖 Agents
+## 📊 Monitored Metrics
 
-| Agent | Model | Purpose |
-|-------|-------|---------|
-| **Architect** | `o3` | System design, database planning, technical decisions |
-| **Developer** | `gpt-4.1` | Full-stack implementation, feature development |
-| **Frontend** | `gpt-4o` | UI/UX, React components, user interfaces |
-| **Backend** | `gpt-4.1` | APIs, databases, server logic, infrastructure |
-| **Tester** | `o4-mini` | Testing, debugging, quality assurance |
-| **Documenter** | `o4-mini` | Documentation, README files, code comments |
+- Total requests processed
+- Requests per second (RPS)
+- Active connections
+- Average response time
+- Total bandwidth (in/out)
+- HTTP status code distribution
+- Server uptime
+- Rolling window calculations
 
-## 🎯 Modes
+## 🛠️ Installation & Setup
 
-- **Orchestrate**: Full orchestration mode with all tools enabled
-- **Plan**: Read-only analysis and planning mode
-- **Build**: Full development mode for implementation
-- **Review**: Code review and testing mode
+### Prerequisites
+- Node.js 14.0.0 or higher
+- npm or yarn package manager
 
-## 📋 Setup
+### Quick Start
 
-1. **Install OpenCode**:
+1. **Install dependencies**:
    ```bash
-   curl -fsSL https://opencode.ai/install | bash
+   npm install
    ```
 
-2. **Authenticate with GitHub Copilot**:
+2. **Start the server**:
    ```bash
-   opencode auth login
-   # Select "GitHub Copilot" and follow the authentication flow
+   npm start
    ```
 
-3. **Clone this configuration**:
-   ```bash
-   git clone https://github.com/pc-style/open-code-flow.git
-   cd open-code-flow
-   ```
+3. **Access the dashboard**:
+   Open your browser and go to: `http://localhost:3000`
 
-4. **Use the configuration**:
-   ```bash
-   # Start interactive mode
-   opencode
+### Development Mode
 
-   # Use specific modes
-   opencode --mode orchestrate
-   opencode --mode build
-   opencode --mode plan
-
-   # Run quick tasks
-   opencode run "Create a React todo app"
-   opencode run "Review this code for security" --mode review
-   ```
-
-## 🏗️ Project Structure
-
-```
-opencode-flow/
-├── opencode.json                    # Main configuration
-├── prompts/                         # Agent prompt files
-│   ├── architect-prompt.md
-│   ├── backend-prompt.md
-│   ├── developer-prompt.md
-│   ├── documenter-prompt.md
-│   ├── frontend-prompt.md
-│   ├── orchestrator-instructions.md
-│   └── tester-prompt.md
-└── [individual prompt files]        # Backup prompt files
-```
-
-## 🎨 Model Selection
-
-Based on [GitHub's official model recommendations](https://docs.github.com/en/copilot/reference/ai-models/model-comparison):
-
-- **GPT-4.1**: General-purpose coding and writing
-- **GPT-4o**: Fast completions with visual understanding
-- **o3**: Deep reasoning and debugging
-- **o4-mini**: Fast help with simple tasks
-
-## 📖 Usage Examples
-
-### Create a Full Application
+For development with auto-restart:
 ```bash
-opencode --mode orchestrate
-"Create a task management app with user authentication, real-time updates, and mobile-responsive design"
+npm run dev
 ```
 
-### Code Review
+## 🌐 API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/` | Traffic monitoring dashboard |
+| `GET` | `/stats` | Current traffic statistics (JSON) |
+| `POST` | `/reset` | Reset all statistics |
+| `GET` | `/health` | Server health check |
+| `GET` | `/api/test` | Test endpoint for generating traffic |
+| `POST` | `/api/test` | Test endpoint for POST requests |
+
+### Example API Response
+
+```json
+{
+  "success": true,
+  "data": {
+    "totalRequests": 1523,
+    "requestsPerSecond": 12,
+    "activeConnections": 3,
+    "averageResponseTime": 45,
+    "totalBytesIn": 2048576,
+    "totalBytesOut": 5242880,
+    "uptime": 3600000,
+    "uptimeFormatted": "1h 0m 0s",
+    "statusCodes": {
+      "200": 1420,
+      "404": 85,
+      "500": 18
+    },
+    "timestamp": 1641234567890
+  }
+}
+```
+
+## 🎛️ Dashboard Features
+
+- **Real-time Updates**: Statistics update every second via WebSocket
+- **Interactive Controls**: Generate test traffic, refresh stats, reset counters
+- **Responsive Design**: Works on desktop, tablet, and mobile devices
+- **Visual Status Indicators**: Color-coded status codes and connection status
+- **Keyboard Shortcuts**: 
+  - `Ctrl/Cmd + R`: Refresh statistics
+  - `Ctrl/Cmd + T`: Generate test traffic
+
+## 🏗️ Architecture
+
+### Core Components
+
+1. **Traffic Tracker Middleware** (`middleware/traffic-tracker.js`)
+   - Monitors all incoming requests
+   - Calculates real-time metrics
+   - Manages rolling window data
+
+2. **Express Server** (`server.js`)
+   - HTTP server with routing
+   - WebSocket integration
+   - API endpoints
+
+3. **Dashboard** (`public/index.html` + `public/app.js`)
+   - Real-time visualization
+   - WebSocket client
+   - Interactive controls
+
+### Data Flow
+
+```
+HTTP Request → Traffic Tracker → Express Routes → Response
+     ↓              ↓                              ↓
+Statistics → WebSocket → Dashboard Updates → User Interface
+```
+
+## 📁 Project Structure
+
+```
+traffic-monitor-server/
+├── package.json              # Dependencies and scripts
+├── server.js                 # Main server file
+├── middleware/
+│   └── traffic-tracker.js    # Traffic monitoring middleware
+├── public/
+│   ├── index.html            # Dashboard HTML
+│   └── app.js               # Dashboard JavaScript
+└── README.md                # This file
+```
+
+## ⚙️ Configuration
+
+### Environment Variables
+
+- `PORT`: Server port (default: 3000)
+- `NODE_ENV`: Environment mode (development/production)
+
+### Server Configuration
+
+You can modify these settings in `server.js`:
+- `UPDATE_INTERVAL`: WebSocket broadcast frequency (default: 1000ms)
+- `windowSize`: Statistics rolling window size (default: 60 seconds)
+
+## 🧪 Testing & Development
+
+### Generate Test Traffic
+
+Use the dashboard button or make direct API calls:
+
 ```bash
-opencode --mode review
-"Review this codebase for security vulnerabilities and performance issues"
+# Generate GET requests
+curl http://localhost:3000/api/test
+
+# Generate POST requests
+curl -X POST http://localhost:3000/api/test \
+  -H "Content-Type: application/json" \
+  -d '{"test": "data"}'
+
+# Check statistics
+curl http://localhost:3000/stats
 ```
 
-### Architecture Planning
+### Load Testing
+
+For performance testing, you can use tools like:
+
 ```bash
-opencode run "Design a microservices architecture for an e-commerce platform" --mode plan
+# Using Apache Bench
+ab -n 1000 -c 10 http://localhost:3000/api/test
+
+# Using curl in a loop
+for i in {1..100}; do curl http://localhost:3000/api/test & done
 ```
 
-## 🔧 Customization
+## 🔒 Security Considerations
 
-The configuration supports:
-- Custom agent prompts in `prompts/` directory
-- Mode-specific tool permissions
-- Temperature control for different creativity levels
-- Model overrides per agent/mode
+- CORS is enabled for all origins (configure as needed)
+- No authentication required (add as needed for production)
+- Rate limiting not implemented (consider adding for production)
+- Input validation minimal (enhance for production use)
 
-## 📚 Documentation
+## 🚀 Production Deployment
 
-- [OpenCode Documentation](https://opencode.ai/docs)
-- [GitHub Copilot Models](https://docs.github.com/en/copilot/reference/ai-models/model-comparison)
+### Recommendations
+
+1. **Process Management**: Use PM2 or similar
+2. **Reverse Proxy**: Use Nginx or Apache
+3. **Environment Variables**: Configure properly
+4. **Monitoring**: Add external monitoring
+5. **Security**: Implement authentication and rate limiting
+
+### PM2 Example
+
+```bash
+# Install PM2
+npm install -g pm2
+
+# Start with PM2
+pm2 start server.js --name "traffic-monitor"
+
+# View logs
+pm2 logs traffic-monitor
+```
 
 ## 🤝 Contributing
 
-Feel free to submit issues and enhancement requests!
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
 
-## 📄 License
+## 📝 License
 
-This configuration is provided as-is for educational and development purposes.
+This project is licensed under the MIT License - see the package.json file for details.
+
+## 🎯 Use Cases
+
+- **Development**: Monitor API usage during development
+- **Testing**: Track performance during load testing  
+- **Debugging**: Identify traffic patterns and issues
+- **Analytics**: Understand application usage
+- **Monitoring**: Real-time server health monitoring
+
+---
+
+Built with ❤️ using Node.js, Express, and Socket.IO

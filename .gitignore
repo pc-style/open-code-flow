@@ -20,3 +20,16 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.temp
+
+# Node modules (if using Node.js projects)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python (if using Python projects)
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+venv/
