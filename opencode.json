@@ -143,12 +143,5 @@
       }
     }
   },
-
-  "permissions": {
-    "edit": "allow",
-    "bash": "allow"
-  },
-
-  "autoupdate": false,
-  "theme": "dark"
+  "autoupdate": false
 }
